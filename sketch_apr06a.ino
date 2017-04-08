@@ -196,7 +196,7 @@ void clearAllLEDS() {
 }
 
 void cmd_connecting() {
-  for(int j = 0; j < 4; j++) {
+  for(int j = 0; j < 6; j++) {
     for(int i = 1; i < NUMPIXELS; i++) {
       pixels.setPixelColor(i, pixels.Color(0,150,0));
       pixels.show();
@@ -213,6 +213,20 @@ void cmd_connected() {
     pixels.show();
   }
   delay(2000);
+}
+
+void cmd_standBy() {
+  for (int i = 1; i < 50; i++) {
+    pixels.setBrightness(i);
+    pixels.show();
+    delay(50);
+  }
+
+  for (int i = 50; i > 0; i--) {
+    pixels.setBrightness(i);
+    pixels.show();
+    delay(50);
+  }
 }
 
 void cmd_alert() {
@@ -241,6 +255,9 @@ void cmd_alert() {
   pixels.setPixelColor(4, pixels.Color(0,0,0));
   pixels.setPixelColor(6, pixels.Color(0,0,0)); 
   pixels.show();
+
+  cmd_standBy();
+
 }
 
 void cmd_ok() {
@@ -258,22 +275,6 @@ void cmd_dataReading() {
   pixels.setPixelColor(0, pixels.Color(0,0,0));
   pixels.show();
   delay(200);
-}
-
-void cmd_standBy() {
-  cmd_ok();
-
-  for (int i = 1; i < 50; i++) {
-    pixels.setBrightness(i);
-    pixels.show();
-    delay(50);
-  }
-
-  for (int i = 50; i > 0; i--) {
-    pixels.setBrightness(i);
-    pixels.show();
-    delay(50);
-  }
 }
 
 /**
@@ -297,10 +298,10 @@ void responseGenerator() {
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial1.begin(9600);
   Serial1.setTimeout(1500);
-  Serial.setTimeout(1500);
+  //Serial.setTimeout(1500);
   
   //INIT LEDS
   pixels.begin();
@@ -313,6 +314,9 @@ void setup()
 
   //SET VATIABLES
   cmdIndex = 0;
+
+  cmd_connecting();
+  delay(1000);
 }
 
 void readCommands() {
@@ -353,9 +357,5 @@ void loop()
 {
   readCommands();
   responseGenerator();
-
-  
-  //delay(1000);
-
 }
 
